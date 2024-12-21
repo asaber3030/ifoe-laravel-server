@@ -16,7 +16,6 @@ class BlogController extends Controller
 		return response()->json(["data" => $blogs]);
 	}
 
-
 	public function store(Request $request): JsonResponse
 	{
 		$validated = $request->validate([
@@ -69,6 +68,6 @@ class BlogController extends Controller
 			return response()->json(["message" => "Blog not found.", 'status' => 404], 404);
 		}
 		$blog->delete();
-		return response()->json(["message" => "Blog deleted successfully."]);
+		return response()->json(["message" => "تم حذف المدونة بنجاح"]);
 	}
 }
