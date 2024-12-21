@@ -11,6 +11,12 @@ use App\Http\Controllers\Api\SpaceRequiredController;
 use App\Http\Controllers\Api\EquipmentCostController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UnitController;
+use App\Http\Controllers\Api\FranchiseTypeController;
+use App\Http\Controllers\Api\FranchiseController;
+use App\Http\Controllers\Api\FranchiseCharacteristicController;
+use App\Http\Controllers\Api\FranchiseImageController;
+use App\Http\Controllers\Api\FranchiseRequestController;
+use App\Http\Controllers\Api\FranchiseRequestHistoryController;
 
 Route::as('api.')->prefix('v1/')->group(function () {
 
@@ -51,6 +57,24 @@ Route::as('api.')->prefix('v1/')->group(function () {
 
 	Route::get('roles', [RoleController::class, 'index']);
 	Route::get('roles/{id}', [RoleController::class, 'show']);
+
+	Route::get('franchises', [FranchiseController::class, 'index']);
+	Route::get('franchises/{id}', [FranchiseController::class, 'show']);
+
+	Route::get('franchise-types', [FranchiseTypeController::class, 'index']);
+	Route::get('franchise-types/{id}', [FranchiseTypeController::class, 'show']);
+
+	Route::get('franchise-characteristics', [FranchiseCharacteristicController::class, 'index']);
+	Route::get('franchise-characteristics/{id}', [FranchiseCharacteristicController::class, 'show']);
+
+	Route::get('franchise-images', [FranchiseImageController::class, 'index']);
+	Route::get('franchise-images/{id}', [FranchiseImageController::class, 'show']);
+
+	Route::get('franchise-requests', [FranchiseRequestController::class, 'index']);
+	Route::get('franchise-requests/{id}', [FranchiseRequestController::class, 'show']);
+
+	Route::get('franchise-requests-history', [FranchiseRequestHistoryController::class, 'index']);
+	Route::get('franchise-requests-history/{id}', [FranchiseRequestHistoryController::class, 'show']);
 
 	Route::middleware('auth:sanctum')->group(function () {
 		Route::middleware('is_admin')->group(function () {
@@ -98,6 +122,36 @@ Route::as('api.')->prefix('v1/')->group(function () {
 			Route::post('roles', [RoleController::class, 'store']);
 			Route::patch('roles/{id}', [RoleController::class, 'update']);
 			Route::delete('roles/{id}', [RoleController::class, 'destroy']);
+
+			// Franchises
+			Route::post('franchises', [FranchiseController::class, 'store']);
+			Route::patch('franchises/{id}', [FranchiseController::class, 'update']);
+			Route::delete('franchises/{id}', [FranchiseController::class, 'destroy']);
+
+			// Franchise Types
+			Route::post('franchise-types', [FranchiseTypeController::class, 'store']);
+			Route::patch('franchise-types/{id}', [FranchiseTypeController::class, 'update']);
+			Route::delete('franchise-types/{id}', [FranchiseTypeController::class, 'destroy']);
+
+			// Franchise characteristics
+			Route::post('franchise-characteristics', [FranchiseCharacteristicController::class, 'store']);
+			Route::patch('franchise-characteristics/{id}', [FranchiseCharacteristicController::class, 'update']);
+			Route::delete('franchise-characteristics/{id}', [FranchiseCharacteristicController::class, 'destroy']);
+
+			// Franchise Images
+			Route::post('franchise-images', [FranchiseImageController::class, 'store']);
+			Route::patch('franchise-images/{id}', [FranchiseImageController::class, 'update']);
+			Route::delete('franchise-images/{id}', [FranchiseImageController::class, 'destroy']);
+
+			// Franchise Requests
+			Route::post('franchise-requests', [FranchiseRequestController::class, 'store']);
+			Route::patch('franchise-requests/{id}', [FranchiseRequestController::class, 'update']);
+			Route::delete('franchise-requests/{id}', [FranchiseRequestController::class, 'destroy']);
+
+			// Franchise Requests History
+			Route::post('franchise-requests-history', [FranchiseRequestHistoryController::class, 'store']);
+			Route::patch('franchise-requests-history/{id}', [FranchiseRequestHistoryController::class, 'update']);
+			Route::delete('franchise-requests-history/{id}', [FranchiseRequestHistoryController::class, 'destroy']);
 		});
 	});
 });
