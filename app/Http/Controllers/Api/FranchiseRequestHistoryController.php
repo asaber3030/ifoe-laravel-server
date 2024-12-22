@@ -67,7 +67,6 @@ class FranchiseRequestHistoryController extends Controller
 	public function update(Request $request, $id)
 	{
 		$validator = Validator::make($request->all(), [
-			'franchise_request_id' => 'required|exists:franchise_requests,id',
 			'status' => 'required|string',
 			'changed_at' => 'required|date',
 			'changed_by' => 'required|exists:users,id',

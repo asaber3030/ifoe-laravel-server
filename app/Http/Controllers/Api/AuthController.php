@@ -27,6 +27,7 @@ class AuthController extends Controller
 
 		return response()->json([
 			'message' => 'تم تسجيل الدخول بنجاح',
+			'status' => 200,
 			'data' => [
 				'token' => $token,
 				'user' => User::where('id', $user->getAuthIdentifier())->with('role')->first(),
@@ -53,7 +54,8 @@ class AuthController extends Controller
 		$token = $user->createToken('token')->plainTextToken;
 
 		return response()->json([
-			'message' => 'تم انشاء المستخدم بنجاح. تم ارسال رمز التحقق الى بريدك الالكتروني',
+			'message' => 'تم انشاء المستخدم بنجاح.',
+			'status' => 201,
 			'data' => [
 				'user' => $user,
 				'token' => $token,
@@ -108,9 +110,7 @@ class AuthController extends Controller
 		$user = User::where('id', $request->user()->id)->with('role')->first();
 		return response()->json([
 			'message' => 'Authorized',
-			'data' => [
-				'user' => $user,
-			],
+			'data' => $user,
 		]);
 	}
 }

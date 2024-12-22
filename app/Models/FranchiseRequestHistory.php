@@ -13,7 +13,7 @@ class FranchiseRequestHistory extends Model
 	protected $table = 'franchise_requests_history';
 	protected $fillable = ['franchise_request_id', 'status', 'changed_at', 'changed_by', 'remarks'];
 
-	public function franchiseRequest()
+	public function request()
 	{
 		return $this->belongsTo(FranchiseRequest::class, 'franchise_request_id');
 	}

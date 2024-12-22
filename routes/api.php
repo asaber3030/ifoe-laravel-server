@@ -17,6 +17,8 @@ use App\Http\Controllers\Api\FranchiseCharacteristicController;
 use App\Http\Controllers\Api\FranchiseImageController;
 use App\Http\Controllers\Api\FranchiseRequestController;
 use App\Http\Controllers\Api\FranchiseRequestHistoryController;
+use App\Http\Controllers\Api\PartnerController;
+use App\Http\Controllers\Api\UserController;
 
 Route::as('api.')->prefix('v1/')->group(function () {
 
@@ -33,6 +35,9 @@ Route::as('api.')->prefix('v1/')->group(function () {
 
 	Route::get('/blogs', [BlogController::class, 'index']);
 	Route::get('/blogs/{blog}', [BlogController::class, 'show']);
+
+	Route::get('/users', [UserController::class, 'index']);
+	Route::get('/users/{user}/requests', [UserController::class, 'getUserFranchiseRequests']);
 
 	Route::get('/categories', [CategoryController::class, 'index']);
 	Route::get('/categories/{category}', [CategoryController::class, 'show']);
@@ -59,7 +64,11 @@ Route::as('api.')->prefix('v1/')->group(function () {
 	Route::get('roles/{id}', [RoleController::class, 'show']);
 
 	Route::get('franchises', [FranchiseController::class, 'index']);
+	Route::get('franchises-filter', [FranchiseController::class, 'filter']);
 	Route::get('franchises/{id}', [FranchiseController::class, 'show']);
+	Route::get('franchises/{id}/requests', [FranchiseController::class, 'showRequests']);
+	Route::get('franchises/{id}/requests/{history}', [FranchiseController::class, 'showRequestHistory']);
+	Route::get('franchises/{id}/images', [FranchiseController::class, 'showImages']);
 
 	Route::get('franchise-types', [FranchiseTypeController::class, 'index']);
 	Route::get('franchise-types/{id}', [FranchiseTypeController::class, 'show']);
@@ -72,12 +81,22 @@ Route::as('api.')->prefix('v1/')->group(function () {
 
 	Route::get('franchise-requests', [FranchiseRequestController::class, 'index']);
 	Route::get('franchise-requests/{id}', [FranchiseRequestController::class, 'show']);
+	Route::get('franchise-requests/{id}/history', [FranchiseRequestController::class, 'showHistory']);
 
 	Route::get('franchise-requests-history', [FranchiseRequestHistoryController::class, 'index']);
 	Route::get('franchise-requests-history/{id}', [FranchiseRequestHistoryController::class, 'show']);
 
+	Route::get('partners/', [PartnerController::class, 'index']);
+	Route::get('partners/{id}', [PartnerController::class, 'show']);
+
 	Route::middleware('auth:sanctum')->group(function () {
 		Route::middleware('is_admin')->group(function () {
+
+			// Partners
+			Route::post('partners/', [PartnerController::class, 'store']);
+			Route::patch('partners/{id}', [PartnerController::class, 'update']);
+			Route::delete('partners/{id}', [PartnerController::class, 'destroy']);
+
 			// Blogs
 			Route::post('/blogs', [BlogController::class, 'store']);
 			Route::patch('/blogs/{blog}', [BlogController::class, 'update']);

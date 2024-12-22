@@ -29,35 +29,37 @@ class BlogController extends Controller
 
 		return response()->json([
 			"message" => "تم انشاء المدونة بنجاح",
-			"data" => $blog
+			"data" => $blog,
+			'status' => 201
 		], 201);
 	}
 
 	public function show($blog): JsonResponse
 	{
 		$data = Blog::find($blog);
-		if (!isset($data)) {
+		if (!$data) {
 			return response()->json(["message" => "Blog not found.", 'status' => 404], 404);
 		}
-		return response()->json(["data" => $blog]);
+		return response()->json(["data" => $data]);
 	}
 
 	public function update(Request $request, $blog): JsonResponse
 	{
 		$data = Blog::find($blog);
-		if (!isset($data)) {
+		if (!$data) {
 			return response()->json(["message" => "Blog not found.", 'status' => 404], 404);
 		}
 		$validated = $request->validate([
-			'title' => 'nullable|string|max:255',
-			'short_text' => 'nullable|string',
-			'blog_content' => 'nullable|string',
-			'image_url' => 'nullable|url',
+			'title' => 'sometimes|string|max:255',
+			'short_text' => 'sometimes|string',
+			'blog_content' => 'sometimes|string',
+			'image_url' => 'sometimes|url',
 		]);
-		$blog->update($validated);
+		Blog::where('id', $blog)->update($request->all());
 		return response()->json([
 			"message" => "تم تحديث المدونة بنجاح",
-			"data" => $blog
+			"data" => $blog,
+			'status' => 200
 		]);
 	}
 

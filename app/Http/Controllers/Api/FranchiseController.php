@@ -6,20 +6,64 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Franchise;
+use Illuminate\Support\Facades\Auth;
+use App\Models\FranchiseRequest;
+use App\Models\FranchiseImage;
+use App\Models\FranchiseRequestHistory;
 
 class FranchiseController extends Controller
 {
   public function index()
   {
-    $franchises = Franchise::with(
+    $franchises = Franchise::with([
       'category',
       'country',
-      'spaceRequired',
-      'trainingPeriod',
+      'spaceRequired' => fn($q) => $q->with('unit'),
+      'trainingPeriod' => fn($q) => $q->with('unit'),
       'franchiseCharacteristic',
-      'contractPeriod',
+      'contractPeriod' => fn($q) => $q->with('unit'),
+      'equipmentCost' => fn($q) => $q->with('unit'),
       'addedBy'
-    )->get();
+    ])->paginate();
+
+    return response()->json([
+      'status' => 200,
+      'data' => $franchises,
+    ], 200);
+  }
+
+  public function filter(Request $request)
+  {
+    $country = $request->query('country');
+    $category = $request->query('category');
+
+    $with = [
+      'category',
+      'country',
+      'spaceRequired' => fn($q) => $q->with('unit'),
+      'trainingPeriod' => fn($q) => $q->with('unit'),
+      'franchiseCharacteristic',
+      'contractPeriod' => fn($q) => $q->with('unit'),
+      'equipmentCost' => fn($q) => $q->with('unit'),
+      'addedBy'
+    ];
+
+    $franchises = Franchise::with($with)->paginate();
+
+    if (isset($country)) {
+      $franchises = Franchise::with($with)->where('country_id', $country)->paginate();
+    }
+
+    if (isset($category)) {
+      $franchises = Franchise::with($with)->where('category_id', $category)->paginate();
+    }
+
+    if (isset($category) && isset($country)) {
+      $franchises = Franchise::with($with)
+        ->where('country_id', $country)
+        ->where('category_id', $category)
+        ->paginate();
+    }
 
     return response()->json([
       'status' => 200,
@@ -29,15 +73,16 @@ class FranchiseController extends Controller
 
   public function show($id)
   {
-    $franchise = Franchise::find($id)->with(
+    $franchise = Franchise::find($id)->with([
       'category',
       'country',
-      'spaceRequired',
-      'trainingPeriod',
+      'spaceRequired' => fn($q) => $q->with('unit'),
+      'trainingPeriod' => fn($q) => $q->with('unit'),
       'franchiseCharacteristic',
-      'contractPeriod',
+      'contractPeriod' => fn($q) => $q->with('unit'),
+      'equipmentCost' => fn($q) => $q->with('unit'),
       'addedBy'
-    )->first();
+    ])->first();
 
     if (!$franchise) {
       return response()->json([
@@ -50,6 +95,42 @@ class FranchiseController extends Controller
       'status' => 200,
       'message' => 'تم العثور على الفرنشايز',
       'data' => $franchise,
+    ], 200);
+  }
+
+  public function showRequests($id)
+  {
+    $requests = FranchiseRequest::where('franchise_id', $id)
+      ->with('user')
+      ->get();
+
+    return response()->json([
+      'status' => 200,
+      'data' => $requests,
+    ], 200);
+  }
+
+  public function showRequestHistory($id, $history)
+  {
+    $requests = FranchiseRequestHistory::where('franchise_request_id', $history)
+      ->with('request', 'changedBy')
+      ->get();
+
+    return response()->json([
+      'status' => 200,
+      'data' => $requests,
+    ], 200);
+  }
+
+  public function showImages($id)
+  {
+    $requests = FranchiseRequest::where('franchise_id', $id)
+      ->with('user')
+      ->get();
+
+    return response()->json([
+      'status' => 200,
+      'data' => $requests,
     ], 200);
   }
 

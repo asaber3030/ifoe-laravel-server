@@ -24,6 +24,11 @@ class FranchiseRequest extends Model
 		'status'
 	];
 
+	public function history()
+	{
+		return $this->hasMany(FranchiseRequestHistory::class, 'franchise_request_id');
+	}
+
 	public function user()
 	{
 		return $this->belongsTo(User::class, 'user_id');

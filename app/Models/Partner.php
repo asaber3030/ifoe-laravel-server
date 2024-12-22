@@ -5,10 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Blog extends Model
+class Partner extends Model
 {
 	use SoftDeletes;
 
-	protected $table = 'blogs';
-	protected $fillable = ['title', 'short_text', 'blog_content', 'image_url'];
+	public $timestamps = false;
+	protected $table = 'partners';
+	protected $fillable = ['image_url'];
 }
