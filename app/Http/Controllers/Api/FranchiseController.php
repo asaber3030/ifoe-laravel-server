@@ -124,13 +124,61 @@ class FranchiseController extends Controller
 
   public function showImages($id)
   {
-    $requests = FranchiseRequest::where('franchise_id', $id)
-      ->with('user')
+    $images = FranchiseImage::where('franchise_id', $id)
       ->get();
 
     return response()->json([
       'status' => 200,
-      'data' => $requests,
+      'data' => $images,
+    ], 200);
+  }
+
+  public function createImage(Request $request, $id)
+  {
+    $request->validate([
+      'image_url' => 'required|string|url',
+    ]);
+
+    $image = FranchiseImage::create([
+      'franchise_id' => $id,
+      'image_url' => $request->image_url,
+    ]);
+
+    return response()->json([
+      'status' => 200,
+      'message' => 'تم رفع الصورة بنجاح',
+    ], 200);
+  }
+
+  public function updateImage(Request $request, $id, $imageId)
+  {
+    $request->validate([
+      'image_url' => 'required|string|url',
+    ]);
+
+    $image = FranchiseImage::find($imageId);
+    $image->update([
+      'image_url' => $request->image_url,
+    ]);
+
+    return response()->json([
+      'status' => 200,
+      'message' => 'تم تعديل الصورة بنجاح',
+    ], 200);
+  }
+
+  public function deleteImage(Request $request, $id, $imageId)
+  {
+    $request->validate([
+      'image_url' => 'required|string|url',
+    ]);
+
+    $image = FranchiseImage::find($imageId);
+    $image->delete();
+
+    return response()->json([
+      'status' => 200,
+      'message' => 'تم حذف الصورة بنجاح',
     ], 200);
   }
 

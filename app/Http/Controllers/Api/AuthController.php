@@ -80,6 +80,7 @@ class AuthController extends Controller
 
 		return response()->json([
 			'message' => 'تم تحديث البيانات بنجاح',
+			'status' => 200,
 			'user' => $user,
 		]);
 	}
@@ -102,7 +103,10 @@ class AuthController extends Controller
 			'password' => Hash::make($request->new_password),
 		]);
 
-		return response()->json(['message' => 'Password updated successfully']);
+		return response()->json([
+			'message' => 'Password updated successfully',
+			'status' => 200,
+		]);
 	}
 
 	public function me(Request $request)

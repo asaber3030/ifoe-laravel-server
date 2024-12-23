@@ -16,6 +16,12 @@ class BlogController extends Controller
 		return response()->json(["data" => $blogs]);
 	}
 
+	public function last_added_blog(): JsonResponse
+	{
+		$blog = Blog::latest()->first();
+		return response()->json(["data" => $blog]);
+	}
+
 	public function store(Request $request): JsonResponse
 	{
 		$validated = $request->validate([

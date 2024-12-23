@@ -19,8 +19,14 @@ use App\Http\Controllers\Api\FranchiseRequestController;
 use App\Http\Controllers\Api\FranchiseRequestHistoryController;
 use App\Http\Controllers\Api\PartnerController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\CountController;
 
 Route::as('api.')->prefix('v1/')->group(function () {
+
+	Route::post('/send-email', [ContactController::class, 'send']);
+	Route::get('/counts', [CountController::class, 'counts']);
+	Route::get('/roles', [UserController::class, 'roles']);
 
 	Route::controller(AuthController::class)->group(function () {
 		Route::post('login', 'login')->name('login');
@@ -34,9 +40,11 @@ Route::as('api.')->prefix('v1/')->group(function () {
 	});
 
 	Route::get('/blogs', [BlogController::class, 'index']);
+	Route::get('/blogs/last-added', [BlogController::class, 'last_added_blog']);
 	Route::get('/blogs/{blog}', [BlogController::class, 'show']);
 
 	Route::get('/users', [UserController::class, 'index']);
+	Route::get('/users/{user}', [UserController::class, 'show']);
 	Route::get('/users/{user}/requests', [UserController::class, 'getUserFranchiseRequests']);
 
 	Route::get('/categories', [CategoryController::class, 'index']);
@@ -69,6 +77,9 @@ Route::as('api.')->prefix('v1/')->group(function () {
 	Route::get('franchises/{id}/requests', [FranchiseController::class, 'showRequests']);
 	Route::get('franchises/{id}/requests/{history}', [FranchiseController::class, 'showRequestHistory']);
 	Route::get('franchises/{id}/images', [FranchiseController::class, 'showImages']);
+	Route::post('franchises/{id}/images', [FranchiseController::class, 'createImage']);
+	Route::patch('franchises/{id}/images/{imageId}', [FranchiseController::class, 'updateImage']);
+	Route::delete('franchises/{id}/images/{imageId}', [FranchiseController::class, 'deleteImage']);
 
 	Route::get('franchise-types', [FranchiseTypeController::class, 'index']);
 	Route::get('franchise-types/{id}', [FranchiseTypeController::class, 'show']);
@@ -80,6 +91,7 @@ Route::as('api.')->prefix('v1/')->group(function () {
 	Route::get('franchise-images/{id}', [FranchiseImageController::class, 'show']);
 
 	Route::get('franchise-requests', [FranchiseRequestController::class, 'index']);
+	Route::post('franchise-requests', [FranchiseRequestController::class, 'store']);
 	Route::get('franchise-requests/{id}', [FranchiseRequestController::class, 'show']);
 	Route::get('franchise-requests/{id}/history', [FranchiseRequestController::class, 'showHistory']);
 
@@ -101,6 +113,11 @@ Route::as('api.')->prefix('v1/')->group(function () {
 			Route::post('/blogs', [BlogController::class, 'store']);
 			Route::patch('/blogs/{blog}', [BlogController::class, 'update']);
 			Route::delete('/blogs/{blog}', [BlogController::class, 'destroy']);
+
+			// Users
+			Route::post('/users', [UserController::class, 'store']);
+			Route::patch('/users/{user}', [UserController::class, 'update']);
+			Route::delete('/users/{user}', [UserController::class, 'destroy']);
 
 			// Categories
 			Route::post('/categories', [CategoryController::class, 'store']);
@@ -163,7 +180,6 @@ Route::as('api.')->prefix('v1/')->group(function () {
 			Route::delete('franchise-images/{id}', [FranchiseImageController::class, 'destroy']);
 
 			// Franchise Requests
-			Route::post('franchise-requests', [FranchiseRequestController::class, 'store']);
 			Route::patch('franchise-requests/{id}', [FranchiseRequestController::class, 'update']);
 			Route::delete('franchise-requests/{id}', [FranchiseRequestController::class, 'destroy']);
 
