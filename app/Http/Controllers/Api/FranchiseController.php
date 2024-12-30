@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\FranchiseRequest;
 use App\Models\FranchiseImage;
 use App\Models\FranchiseRequestHistory;
+use App\Models\SpaceRequired;
+
+use App\Models\EquipmentCost;
+use App\Models\TrainingPeriod;
+use App\Models\ContractPeriod;
+use App\Models\FranchiseCharacteristic;
+
 
 class FranchiseController extends Controller
 {
@@ -187,19 +194,32 @@ class FranchiseController extends Controller
     $validator = Validator::make($request->all(), [
       'name' => 'required|string',
       'description' => 'nullable|string',
-      'equipment_cost_id' => 'required|exists:equipment_costs,id',
       'category_id' => 'required|exists:categories,id',
       'country_id' => 'required|exists:countries,id',
       'image_url' => 'nullable|string',
       'number_of_branches' => 'required|integer',
-      'space_required_id' => 'required|exists:space_required,id',
       'number_of_labors' => 'required|integer',
-      'training_period_id' => 'required|exists:training_periods,id',
       'establish_year' => 'required|integer',
       'center_office' => 'required|string',
-      'franchise_characteristics_id' => 'required|exists:franchise_characteristics,id',
-      'contract_period_id' => 'required|exists:contract_periods,id',
-      'added_by' => 'required|exists:users,id'
+      'added_by' => 'required|exists:users,id',
+
+      'space_required.unit_id' => 'required|exists:units,id',
+      'space_required.value' => 'required|numeric|gt:0',
+
+      'equipment_cost.unit_id' => 'required|exists:units,id',
+      'equipment_cost.value' => 'required|numeric|gt:0',
+
+      'training_period.unit_id' => 'required|exists:units,id',
+      'training_period.value' => 'required|numeric|gt:0',
+
+      'contract_period.unit_id' => 'required|exists:units,id',
+      'contract_period.value' => 'required|numeric|gt:0',
+
+      'franchise_characteristics.franchise_fees' => 'required|numeric|gt:0',
+      'franchise_characteristics.royalty_fees' => 'required|numeric|gt:0',
+      'franchise_characteristics.marketing_fees' => 'required|numeric|gt:0',
+      'franchise_characteristics.investments_cost' => 'required|numeric|gt:0',
+
     ]);
 
     if ($validator->fails()) {
@@ -210,7 +230,32 @@ class FranchiseController extends Controller
       ], 422);
     }
 
-    $franchise = Franchise::create($request->all());
+    $space = SpaceRequired::create($request->space_required);
+    $equipment = EquipmentCost::create($request->equipment_cost);
+    $training = TrainingPeriod::create($request->training_period);
+    $contract = ContractPeriod::create($request->contract_period);
+    $franchiseCharacteristics = FranchiseCharacteristic::create($request->franchise_characteristics);
+
+    $user = Auth::user();
+
+    $franchise = Franchise::create([
+      'name' => $request->name,
+      'description' => $request->description,
+      'category_id' => $request->category_id,
+      'country_id' => $request->country_id,
+      'image_url' => $request->image_url,
+      'number_of_branches' => $request->number_of_branches,
+      'number_of_labors' => $request->number_of_labors,
+      'establish_year' => $request->establish_year,
+      'center_office' => $request->center_office,
+
+      'added_by' => $user->id,
+      'training_period_id' => $training->id,
+      'franchise_characteristics_id' => $franchiseCharacteristics->id,
+      'contract_period_id' => $contract->id,
+      'space_required_id' => $space->id,
+      'equipment_cost_id' => $equipment->id,
+    ]);
 
     return response()->json([
       'status' => 201,
@@ -224,19 +269,32 @@ class FranchiseController extends Controller
     $validator = Validator::make($request->all(), [
       'name' => 'nullable|string',
       'description' => 'nullable|string',
-      'equipment_cost_id' => 'nullable|exists:equipment_costs,id',
       'category_id' => 'nullable|exists:categories,id',
       'country_id' => 'nullable|exists:countries,id',
       'image_url' => 'nullable|string',
       'number_of_branches' => 'nullable|integer',
-      'space_required_id' => 'nullable|exists:space_required,id',
       'number_of_labors' => 'nullable|integer',
-      'training_period_id' => 'nullable|exists:training_periods,id',
       'establish_year' => 'nullable|integer',
       'center_office' => 'nullable|string',
-      'franchise_characteristics_id' => 'nullable|exists:franchise_characteristics,id',
-      'contract_period_id' => 'nullable|exists:contract_periods,id',
-      'added_by' => 'nullable|exists:users,id'
+      'added_by' => 'nullable|exists:users,id',
+
+      'space_required.unit_id' => 'nullable|exists:units,id',
+      'space_required.value' => 'nullable|numeric|gt:0',
+
+      'equipment_cost.unit_id' => 'nullable|exists:units,id',
+      'equipment_cost.value' => 'nullable|numeric|gt:0',
+
+      'training_period.unit_id' => 'nullable|exists:units,id',
+      'training_period.value' => 'nullable|numeric|gt:0',
+
+      'contract_period.unit_id' => 'nullable|exists:units,id',
+      'contract_period.value' => 'nullable|numeric|gt:0',
+
+      'franchise_characteristics.franchise_fees' => 'nullable|numeric|gt:0',
+      'franchise_characteristics.royalty_fees' => 'nullable|numeric|gt:0',
+      'franchise_characteristics.marketing_fees' => 'nullable|numeric|gt:0',
+      'franchise_characteristics.investments_cost' => 'nullable|numeric|gt:0',
+
     ]);
 
     if ($validator->fails()) {
@@ -247,22 +305,35 @@ class FranchiseController extends Controller
       ], 422);
     }
 
-    $franchise = Franchise::find($id);
+    $space = SpaceRequired::create($request->space_required);
+    $equipment = EquipmentCost::create($request->equipment_cost);
+    $training = TrainingPeriod::create($request->training_period);
+    $contract = ContractPeriod::create($request->contract_period);
+    $franchiseCharacteristics = FranchiseCharacteristic::create($request->franchise_characteristics);
 
-    if (!$franchise) {
-      return response()->json([
-        'status' => 404,
-        'message' => 'الفرنشايز غير موجود',
-      ], 404);
-    }
+    $franchise = Franchise::where('id', $id)->update([
+      'name' => $request->name,
+      'description' => $request->description,
+      'category_id' => $request->category_id,
+      'country_id' => $request->country_id,
+      'image_url' => $request->image_url,
+      'number_of_branches' => $request->number_of_branches,
+      'number_of_labors' => $request->number_of_labors,
+      'establish_year' => $request->establish_year,
+      'center_office' => $request->center_office,
 
-    $franchise->update($request->all());
+      'training_period_id' => $training->id,
+      'franchise_characteristics_id' => $franchiseCharacteristics->id,
+      'contract_period_id' => $contract->id,
+      'space_required_id' => $space->id,
+      'equipment_cost_id' => $equipment->id,
+    ]);
 
     return response()->json([
-      'status' => 200,
+      'status' => 201,
       'message' => 'تم تحديث الفرنشايز بنجاح',
       'data' => $franchise,
-    ], 200);
+    ], 201);
   }
 
   public function destroy($id)
