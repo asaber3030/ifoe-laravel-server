@@ -10,5 +10,5 @@ class Blog extends Model
 	use SoftDeletes;
 
 	protected $table = 'blogs';
-	protected $fillable = ['title', 'short_text', 'blog_content', 'image_url'];
+	protected $fillable = ['title', 'short_text', 'blog_content', 'image_url', 'keywords'];
 }

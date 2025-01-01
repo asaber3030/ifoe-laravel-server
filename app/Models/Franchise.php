@@ -18,6 +18,7 @@ class Franchise extends Model
 		'category_id',
 		'country_id',
 		'image_url',
+		'video_url',
 		'number_of_branches',
 		'space_required_id',
 		'number_of_labors',

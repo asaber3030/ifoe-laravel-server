@@ -28,6 +28,7 @@ class BlogController extends Controller
 			'title' => 'required|string|max:255',
 			'short_text' => 'required|string',
 			'blog_content' => 'required|string',
+			'keywords' => 'nullable|string',
 			'image_url' => 'nullable|url',
 		]);
 
@@ -59,6 +60,7 @@ class BlogController extends Controller
 			'title' => 'sometimes|string|max:255',
 			'short_text' => 'sometimes|string',
 			'blog_content' => 'sometimes|string',
+			'keywords' => 'sometimes|string|max:255',
 			'image_url' => 'sometimes|url',
 		]);
 		Blog::where('id', $blog)->update($request->all());

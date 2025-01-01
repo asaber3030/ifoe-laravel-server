@@ -80,7 +80,7 @@ class FranchiseController extends Controller
 
   public function show($id)
   {
-    $franchise = Franchise::find($id)->with([
+    $franchise = Franchise::with([
       'category',
       'country',
       'spaceRequired' => fn($q) => $q->with('unit'),
@@ -89,7 +89,7 @@ class FranchiseController extends Controller
       'contractPeriod' => fn($q) => $q->with('unit'),
       'equipmentCost' => fn($q) => $q->with('unit'),
       'addedBy'
-    ])->first();
+    ])->find($id);
 
     if (!$franchise) {
       return response()->json([
@@ -197,6 +197,7 @@ class FranchiseController extends Controller
       'category_id' => 'required|exists:categories,id',
       'country_id' => 'required|exists:countries,id',
       'image_url' => 'nullable|string',
+      'video_url' => 'nullable|string|url',
       'number_of_branches' => 'required|integer',
       'number_of_labors' => 'required|integer',
       'establish_year' => 'required|integer',
@@ -244,11 +245,11 @@ class FranchiseController extends Controller
       'category_id' => $request->category_id,
       'country_id' => $request->country_id,
       'image_url' => $request->image_url,
+      'video_url' => $request->video_url,
       'number_of_branches' => $request->number_of_branches,
       'number_of_labors' => $request->number_of_labors,
       'establish_year' => $request->establish_year,
       'center_office' => $request->center_office,
-
       'added_by' => $user->id,
       'training_period_id' => $training->id,
       'franchise_characteristics_id' => $franchiseCharacteristics->id,
@@ -272,6 +273,7 @@ class FranchiseController extends Controller
       'category_id' => 'nullable|exists:categories,id',
       'country_id' => 'nullable|exists:countries,id',
       'image_url' => 'nullable|string',
+      'video_url' => 'nullable|string',
       'number_of_branches' => 'nullable|integer',
       'number_of_labors' => 'nullable|integer',
       'establish_year' => 'nullable|integer',
@@ -294,7 +296,6 @@ class FranchiseController extends Controller
       'franchise_characteristics.royalty_fees' => 'nullable|numeric|gt:0',
       'franchise_characteristics.marketing_fees' => 'nullable|numeric|gt:0',
       'franchise_characteristics.investments_cost' => 'nullable|numeric|gt:0',
-
     ]);
 
     if ($validator->fails()) {
@@ -317,11 +318,11 @@ class FranchiseController extends Controller
       'category_id' => $request->category_id,
       'country_id' => $request->country_id,
       'image_url' => $request->image_url,
+      'video_url' => $request->video_url,
       'number_of_branches' => $request->number_of_branches,
       'number_of_labors' => $request->number_of_labors,
       'establish_year' => $request->establish_year,
       'center_office' => $request->center_office,
-
       'training_period_id' => $training->id,
       'franchise_characteristics_id' => $franchiseCharacteristics->id,
       'contract_period_id' => $contract->id,
@@ -330,7 +331,7 @@ class FranchiseController extends Controller
     ]);
 
     return response()->json([
-      'status' => 201,
+      'status' => 200,
       'message' => 'تم تحديث الفرنشايز بنجاح',
       'data' => $franchise,
     ], 201);
