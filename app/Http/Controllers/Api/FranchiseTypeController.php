@@ -10,7 +10,7 @@ class FranchiseTypeController extends Controller
 {
 	public function index()
 	{
-		$franchiseTypes = FranchiseType::all();
+		$franchiseTypes = FranchiseType::orderBy('id', 'desc')->all();
 
 		return response()->json([
 			'status' => 200,

@@ -12,7 +12,7 @@ class BlogController extends Controller
 
 	public function index(): JsonResponse
 	{
-		$blogs = Blog::paginate();
+		$blogs = Blog::orderBy('id', 'desc')->paginate();
 		return response()->json(["data" => $blogs]);
 	}
 

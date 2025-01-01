@@ -11,7 +11,7 @@ class EquipmentCostController extends Controller
 {
 	public function index()
 	{
-		$equpimentCosts = EquipmentCost::with('unit')->get(); // Includes the related Unit data
+		$equpimentCosts = EquipmentCost::orderBy('id', 'desc')->with('unit')->get(); // Includes the related Unit data
 		return response()->json([
 			'status' => 200,
 			'data' => $equpimentCosts

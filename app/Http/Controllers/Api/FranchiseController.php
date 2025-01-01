@@ -22,7 +22,7 @@ class FranchiseController extends Controller
 {
   public function index()
   {
-    $franchises = Franchise::with([
+    $franchises = Franchise::orderBy('id', 'desc')->with([
       'category',
       'country',
       'spaceRequired' => fn($q) => $q->with('unit'),

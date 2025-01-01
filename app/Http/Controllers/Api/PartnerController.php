@@ -11,7 +11,7 @@ class PartnerController extends Controller
 {
 	public function index()
 	{
-		$partners = Partner::all();
+		$partners = Partner::orderBy('id', 'desc')->get();
 
 		return response()->json([
 			'status' => 200,
@@ -56,7 +56,7 @@ class PartnerController extends Controller
 
 		return response()->json([
 			'status' => 201,
-			'message' => 'تم إنشاء العنصر بنجاح',
+			'message' => 'تم إنشاء الشريك بنجاح',
 			'data' => $partner,
 		]);
 	}
@@ -88,7 +88,7 @@ class PartnerController extends Controller
 
 		return response()->json([
 			'status' => 200,
-			'message' => 'تم تحديث العنصر بنجاح',
+			'message' => 'تم تحديث الشريك بنجاح',
 			'data' => $partner,
 		]);
 	}
@@ -108,7 +108,7 @@ class PartnerController extends Controller
 
 		return response()->json([
 			'status' => 200,
-			'message' => 'تم حذف العنصر بنجاح',
+			'message' => 'تم حذف الشريك بنجاح',
 		]);
 	}
 }

@@ -12,7 +12,7 @@ class FranchiseRequestController extends Controller
 {
 	public function index()
 	{
-		$franchiseRequests = FranchiseRequest::with('user')->get();
+		$franchiseRequests = FranchiseRequest::orderBy('id', 'desc')->with('user')->get();
 		return response()->json([
 			'status' => 200,
 			'message' => 'تم جلب طلبات الامتياز بنجاح',

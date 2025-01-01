@@ -11,7 +11,7 @@ class ContractPeriodController extends Controller
 {
 	public function index()
 	{
-		$contractPeriods = ContractPeriod::with('unit')->get(); // Includes the related Unit data
+		$contractPeriods = ContractPeriod::orderBy('id', 'desc')->with('unit')->get(); // Includes the related Unit data
 		return response()->json([
 			'status' => 200,
 			'data' => $contractPeriods

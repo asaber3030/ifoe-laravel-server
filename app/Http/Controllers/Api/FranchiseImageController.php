@@ -11,7 +11,7 @@ class FranchiseImageController extends Controller
 {
 	public function index()
 	{
-		$franchiseImages = FranchiseImage::all();
+		$franchiseImages = FranchiseImage::orderBy('id', 'desc')->all();
 		$response = [
 			'status' => 200,
 			'message' => 'تم جلب الصور بنجاح',
