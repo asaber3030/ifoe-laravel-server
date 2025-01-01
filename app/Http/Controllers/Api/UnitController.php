@@ -10,7 +10,7 @@ class UnitController extends Controller
 {
   public function index()
   {
-    $units = Unit::orderBy('id', 'desc')->all();
+    $units = Unit::orderBy('id', 'desc')->get();
     return response()->json([
       'status' => 200,
       'message' => 'تم جلب الوحدات بنجاح',

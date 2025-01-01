@@ -16,7 +16,7 @@ class UserController extends Controller
 
 	public function roles(): JsonResponse
 	{
-		$roles = Role::orderBy('id', 'desc')->all();
+		$roles = Role::orderBy('id', 'desc')->get();
 		return response()->json(["data" => $roles]);
 	}
 

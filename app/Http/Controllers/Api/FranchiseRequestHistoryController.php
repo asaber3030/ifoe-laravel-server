@@ -11,7 +11,7 @@ class FranchiseRequestHistoryController extends Controller
 {
 	public function index()
 	{
-		$history = FranchiseRequestHistory::orderBy('id', 'desc')->all();
+		$history = FranchiseRequestHistory::orderBy('id', 'desc')->get();
 		return response()->json([
 			'status' => 200,
 			'message' => 'تم استرجاع سجل الطلبات بنجاح',

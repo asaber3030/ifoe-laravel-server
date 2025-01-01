@@ -12,7 +12,7 @@ class FranchiseCharacteristicController extends Controller
 
 	public function index()
 	{
-		$franchiseCharacteristics = FranchiseCharacteristic::orderBy('id', 'desc')->all();
+		$franchiseCharacteristics = FranchiseCharacteristic::orderBy('id', 'desc')->get();
 
 		return response()->json([
 			'status' => 200,
